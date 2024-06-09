@@ -1,0 +1,229 @@
+<?xml version="1.0" ?>
+<robot name="mb3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro name="mb3_description" params="main_color sub_color">
+
+<!-- TODO add realsense2_description -->
+<xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+<xacro:arg name="use_nominal_extrinsics" default="true"/>
+<xacro:arg name="add_plug" default="false" />
+<xacro:arg name="use_mesh" default="true" />
+<xacro:arg name="publish_pointcloud" default="false" />
+
+<link name="base_footprint"/>
+
+<joint name="base_joint" type="fixed">
+  <parent link="base_footprint"/>
+  <child link="base_link" />
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.004293482998662383 -0.00030859306463634794 0.17136148609204646" rpy="0 0 0"/>
+    <mass value="1.7106034435951374"/>
+    <inertia ixx="0.052161" iyy="0.051259" izz="0.019064" ixy="3e-06" iyz="-6e-06" ixz="0.000528"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${main_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel_left_link">
+  <inertial>
+    <origin xyz="-4.754140986634736e-06 0.009000185117496257 5.457582261676752e-06" rpy="0 0 0"/>
+    <mass value="0.13485979271633458"/>
+    <inertia ixx="0.000113" iyy="0.000218" izz="0.000113" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.067724 -0.125723 -0.055" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/wheel_left_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${main_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.067724 -0.125723 -0.055" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/wheel_left_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel_right_link">
+  <inertial>
+    <origin xyz="-4.7541409872037255e-06 -0.008999814882503981 -4.983384311187111e-06" rpy="0 0 0"/>
+    <mass value="0.13485979271633458"/>
+    <inertia ixx="0.000113" iyy="0.000218" izz="0.000113" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.067724 0.126277 -0.055" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/wheel_right_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${main_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.067724 0.126277 -0.055" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/wheel_right_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<!-- TODO camera, imu, and scan link/joint parameter. -->
+<link name="base_camera_link">
+  <!-- <inertial>
+    <origin xyz="0.011667395904309083 -0.0004307802802340705 -2.391156465555988e-05" rpy="0 0 0"/>
+    <mass value="0.03871755432765075"/>
+    <inertia ixx="2.5e-05" iyy="4e-06" izz="2.5e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial> -->
+  <visual>
+    <origin xyz="-0.100275 0.000277 -0.123" rpy="0 0 0"/>
+    <!-- <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_camera_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${sub_color}"/> -->
+  </visual>
+  <!-- <collision>
+    <origin xyz="-0.100275 0.000277 -0.123" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_camera_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<!-- ajust origin link position -->
+<xacro:sensor_d435 parent="base_camera_link" use_nominal_extrinsics="$(arg use_nominal_extrinsics)" add_plug="$(arg add_plug)" use_mesh="$(arg use_mesh)">
+  <origin xyz="0.01 0.0 -0.013" rpy="0 0 0"/>
+</xacro:sensor_d435>
+
+<!-- add imu link and joint -->
+<joint name="imu_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="imu_link"/>
+  <origin xyz="0.0 0 0.075" rpy="0 0 0"/>
+</joint>
+
+<link name="imu_link"/>
+
+<link name="base_scan">
+  <inertial>
+    <origin xyz="4.66209901580836e-07 2.772239100696551e-07 0.020552407285352278" rpy="0 0 0"/>
+    <mass value="1.3408454402977503"/>
+    <inertia ixx="0.000644" iyy="0.000634" izz="0.000877" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <!-- z axis down to 0.03 -->
+    <!-- <origin xyz="-0.000224 0.000277 -0.11175" rpy="0 0 0"/> -->
+    <origin xyz="-0.000224 0.000277 -0.14175" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_scan.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${main_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.000224 0.000277 -0.11175" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/base_scan.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="scan_joint" type="fixed">
+  <!-- z axis up to 0.03 -->
+  <!-- <origin xyz="0.000224 -0.000277 0.11175" rpy="0 0 0"/> -->
+  <origin xyz="0.000224 -0.000277 0.14175" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="base_scan"/>
+</joint>
+<!-- TODO end -->
+
+<link name="cover_top_link">
+  <inertial>
+    <origin xyz="-0.07757557508094115 0.10827523474357287 -0.009944435474768407" rpy="0 0 0"/>
+    <mass value="0.3619278541570835"/>
+    <inertia ixx="0.005578" iyy="0.00441" izz="0.009928" ixy="-0.0" iyz="-0.0" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.068001 0.108552 -0.10375" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/cover_top_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${main_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.068001 0.108552 -0.10375" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/cover_top_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="cover_bottom_link">
+  <inertial>
+    <origin xyz="-0.07757557508094204 0.10827532739981528 0.009944909672720749" rpy="0 0 0"/>
+    <mass value="0.3619278541570835"/>
+    <inertia ixx="0.005578" iyy="0.00441" izz="0.009928" ixy="0.0" iyz="-0.0" ixz="-3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.068001 0.108552 -0.04075" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/cover_bottom_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="${sub_color}"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.068001 0.108552 -0.04075" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find mb3_description)/meshes/cover_bottom_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="wheel_left_joint" type="continuous">
+  <origin xyz="0.067724 0.125723 0.055" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="wheel_left_link"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="wheel_right_joint" type="continuous">
+  <origin xyz="0.067724 -0.126277 0.055" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="wheel_right_link"/>
+  <!-- <axis xyz="-0.0 -1.0 0.0"/> -->
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="base_camera_joint" type="fixed">
+  <origin xyz="0.100275 -0.000277 0.123" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="base_camera_link"/>
+</joint>
+
+<joint name="cover_top_joint" type="fixed">
+  <origin xyz="0.068001 -0.108552 0.10375" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="cover_top_link"/>
+</joint>
+
+<joint name="cover_bottom_joint" type="fixed">
+  <origin xyz="0.068001 -0.108552 0.04075" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="cover_bottom_link"/>
+</joint>
+
+</xacro:macro>
+</robot>

@@ -1,0 +1,8 @@
+[submodule "realsense-ros_jp_custom"]
+	path = realsense-ros_jp_custom
+	url = https://github.com/ROBOTIS-JAPAN-GIT/realsense-ros_jp_custom.git
+	branch = humble-jp-devel
+[submodule "realsense_gazebo_plugin"]
+	path = realsense_gazebo_plugin
+	url = https://github.com/pal-robotics/realsense_gazebo_plugin.git
+	branch = foxy-devel

@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<robot name="mb3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find mb3_description)/urdf/materials.xacro"/>
+<xacro:include filename="$(find mb3_description)/urdf/mb3.trans"/>
+<xacro:include filename="$(find mb3_description)/urdf/mb3.gazebo"/>
+<xacro:include filename="$(find mb3_description)/urdf/mb3_description.xacro"/>
+<xacro:mb3_description main_color="grey" sub_color="white"/>
+
+</robot>
